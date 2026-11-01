@@ -1,0 +1,17 @@
+{
+  "name": "mundos-ia",
+  "version": "1.0.0",
+  "description": "Genera bocetos visuales de mundos imaginarios con IA",
+  "keywords": [
+    "nodejs",
+    "ia",
+    "generative-art",
+    "games"
+  ],
+  "author": "Memcy-10",
+  "license": "MIT",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  }
+}
