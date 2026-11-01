@@ -31,7 +31,7 @@ async function describirMundo(mundo) {
     throw new Error('El objeto del mundo no tiene la estructura esperada.');
   }
 
-  const promptSistema = 'Describe una única imagen de un mundo imaginario con estilo artístico visual, en inglés, en un solo párrafo de 80 a 120 palabras. Menciona estos cinco colores: red, blue, green, gold, violet. Habla de la escena, elementos, iluminación, composición y estilo artístico. No uses títulos, markdown, ni texto escrito dentro de la imagen.';
+  const promptSistema = `Write only in English: describe one image of this imaginary world in a single paragraph of 80 to 120 words. Describe the scene, elements, lighting, composition, and artistic style; do not write a story, title, markdown, or text that should appear inside the image. Mention all colors from this palette, translating their names into English while preserving their meaning: ${mundo.colores.join(', ')}.`;
 
   const respuesta = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
     method: 'POST',
