@@ -19,9 +19,7 @@ function verificarVariablesDeEntorno() {
 }
 
 // paso 2: valida que el archivo del mundo exista antes de continuar, para reusar el JSON guardado.
-function rutaMundo(id) {
-  return path.join(__dirname, '..', 'data', `mundo_${id}.json`);
-}
+// Lugar de la funcion borrada del primer cambio hecho por mi
 
 function rutaDescripcion(id) {
   return path.join(__dirname, '..', 'descripciones', `mundo_${id}.txt`);
@@ -56,11 +54,12 @@ async function main() {
       console.log(`Paso 2: descripción guardada en ${path.relative(process.cwd(), archivoDescripcion).replace(/\\/g, '/')}`);
     }
 
+    descripcion = fs.readFileSync(archivoDescripcion, 'utf8');
     const archivoImagen = rutaImagen(id);
     if (fs.existsSync(archivoImagen)) {
       console.log(`Paso 3: la imagen ya existía, no se llamó al modelo de imágenes.`);
     } else {
-      await generarImagen(descripcion);
+      await generarImagen(id, descripcion);
       console.log(`Paso 3: imagen guardada en ${path.relative(process.cwd(), archivoImagen).replace(/\\/g, '/')}`);
     }
 

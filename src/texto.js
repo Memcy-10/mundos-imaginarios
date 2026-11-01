@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const MODELO_TEXTO = 'meta/llama-3.2-90b-vision-instruct';
+const MAX_TOKENS = 250;
 
 // paso 1: convierte estados HTTP en mensajes claros para el usuario, sin mostrar detalles técnicos.
 function obtenerMensajeError(status, headers) {
@@ -36,16 +37,24 @@ async function describirMundo(mundo) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Accept: 'application/json',
       Authorization: `Bearer ${process.env.NVIDIA_API_KEY}`,
     },
     body: JSON.stringify({
       model: MODELO_TEXTO,
+      max_tokens: MAX_TOKENS,
+      temperature: 1,
+      top_p: 1,
+      stream: false,
       messages: [
         { role: 'system', content: promptSistema },
-        { role: 'user', content: JSON.stringify(mundo) },
+        {
+          role: 'user',
+          content: [{ type: 'text', text: JSON.stringify(mundo) }],
+        },
       ],
     }),
-    signal: AbortSignal.timeout(30000),
+    signal: AbortSignal.timeout(240000),
   });
 
   if (!respuesta.ok) {

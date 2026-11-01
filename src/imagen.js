@@ -21,23 +21,17 @@ function obtenerMensajeError(status) {
   return 'No se pudo generar la imagen del mundo.';
 }
 
-// paso 2: genera la imagen a partir de la descripción guardada en descripciones/mundo_<id>.txt.
-async function generarImagen(descripcion) {
+// paso 2: genera la imagen usando el id y la descripción leídos desde el archivo guardado.
+async function generarImagen(id, descripcion) {
+  if (typeof id !== 'string' || id.trim() === '') {
+    throw new Error('El id del mundo no es válido.');
+  }
+
   if (typeof descripcion !== 'string' || descripcion.trim() === '') {
     throw new Error('La descripción de la imagen está vacía.');
   }
 
-  const id = descripcion.includes('mundo_') ? descripcion.split('mundo_')[1].split('.')[0] : null;
-  const rutaDescripcion = id
-    ? path.join(__dirname, '..', 'descripciones', `mundo_${id}.txt`)
-    : path.join(__dirname, '..', 'descripciones');
-
-  let textoDescripcion = descripcion;
-  if (fs.existsSync(rutaDescripcion) && fs.statSync(rutaDescripcion).isFile()) {
-    textoDescripcion = fs.readFileSync(rutaDescripcion, 'utf8');
-  }
-
-  const promtFinal = textoDescripcion.trim();
+  const promptFinal = descripcion.trim();
 
   if (!process.env.ACCOUNT_ID) {
     throw new Error('Falta la variable ACCOUNT_ID en tu archivo .env.');
@@ -50,7 +44,7 @@ async function generarImagen(descripcion) {
       Authorization: `Bearer ${process.env.CLOUDFLARE_API_KEY}`,
     },
     body: JSON.stringify({
-      prompt: promtFinal,
+      prompt: promptFinal,
       steps: 4,
     }),
     signal: AbortSignal.timeout(60000),
@@ -85,8 +79,7 @@ async function generarImagen(descripcion) {
   const carpetaImagen = path.join(__dirname, '..', 'imagenes');
   fs.mkdirSync(carpetaImagen, { recursive: true });
 
-  const idImagen = id || 'mundo';
-  const rutaImagen = path.join(carpetaImagen, `${idImagen}.jpg`);
+  const rutaImagen = path.join(carpetaImagen, `mundo_${id}.jpg`);
   fs.writeFileSync(rutaImagen, bytes);
 
   return bytes;
