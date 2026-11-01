@@ -79,15 +79,13 @@ Se usa Cloudflare Workers AI para generar imágenes:
 
 ## Experimento npm publish --dry-run
 
-Este espacio está listo para que anotes lo que pasó al renombrar `.gitignore` a `.gitignore.off` y por qué es peligroso.
+Ejecuté `npm publish --dry-run` sin publicar el paquete. Con `.gitignore` presente, npm indicó que lo usaría para excluir archivos porque no hay un `.npmignore`. El listado no incluyó `.env` ni las carpetas `data/`, `descripciones/` e `imagenes/`.
 
-```text
-Resultado esperado no inventado: deja aquí lo que observes al ejecutar npm publish --dry-run.
-```
+Después renombré temporalmente `.gitignore` a `.gitignore.off` y repetí el comando. El listado del paquete sí incluyó `.env`, los archivos JSON de `data/`, las descripciones y las imágenes. Al terminar, restauré el nombre `.gitignore`.
 
 ### ¿Por qué es peligroso renombrar `.gitignore`?
 
-Porque Git deja de ignorar automáticamente archivos sensibles o temporales como `node_modules/`, `.env`, `data/`, `descripciones/` e `imagenes/`, y eso puede hacer que se suban elementos no deseados al repositorio.
+En este experimento, npm usó `.gitignore` como regla de exclusión para el paquete cuando no había `.npmignore`. Al renombrarlo, esos archivos dejaron de excluirse del paquete; por eso el listado incluyó `.env` y archivos generados. Si se publicara sin revisar ese listado, podrían filtrarse claves y distribuirse archivos que no deberían formar parte del paquete. El `--dry-run` solo mostró el nombre y tamaño de `.env`
 
 ## Preguntas de reflexión
 
